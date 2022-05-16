@@ -1,6 +1,11 @@
 package jpabook.jpashop.domain;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id @GeneratedValue
@@ -56,9 +63,42 @@ public class Order {
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.setOrder(this);
-
     }
 
+    //==생성메서드==//
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        //... -> 여러개의 변수를 넘길때(정해지지않은 숫자의 파라미터를 넘길때) 사용하는 문법
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setOrderStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+    //== 비지니스 로직==//
+    /**
+     * 주문 취소
+     */
+    public void cancel(){
+        if (delivery.getStatus() == DeliveryStatus.COMP) {
+            throw new IllegalStateException("배송완료된 상품은 주문취소가 불가능 합니다");
+        }
 
+        this.setOrderStatus(OrderStatus.CANCEL);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+    //==조회==//
+    public int getTotalPrice(){
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
 
 }

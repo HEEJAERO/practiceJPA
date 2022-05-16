@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest //최근 RunWith(junit 5 의 @ExtendWith(SpringExtension.class)) 어노테이션이 여기에 들어감
 @Transactional
-class MemberServiceTest {
+public class MemberServiceTest {
     @Autowired
     MemberService memberService;
     @Autowired
