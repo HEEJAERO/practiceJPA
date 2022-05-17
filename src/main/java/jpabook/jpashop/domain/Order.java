@@ -40,7 +40,7 @@ public class Order {
 
     // cascade = CascadeType.ALL 적용 후 : em.persist(order) ->order 저장 시 order의 컬렉션에 있는 모든 orderItems 를 저장해준다
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id") // 연관관계의 주인에 작성
     private Delivery delivery;
 
