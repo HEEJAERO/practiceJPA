@@ -18,6 +18,7 @@ public class MemberService {
 
 
     private final MemberRepository memberRepository;
+
     //생성자 인잭션이 제일 권장됨  그외에도 setter 인젝션도 있긴함
 
 //    //@Autowired  //생성자가 하나만 있는 경우 스프링이 자동으로 autowired 를 해준다
@@ -45,5 +46,11 @@ public class MemberService {
 
     public Member findMember(Long memberId) {
         return memberRepository.findOne(memberId);
+    }
+
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
     }
 }
