@@ -1,8 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
 plugins {
 	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
+
 
 group = 'jpabook'
 version = '0.0.1-SNAPSHOT'
@@ -29,7 +35,20 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5' // QueryDSL
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	annotationProcessor(
+			"javax.persistence:javax.persistence-api",
+			"javax.annotation:javax.annotation-api",
+			"com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+}
+// QueryDSL
+sourceSets {
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
 }
 
 tasks.named('test') {

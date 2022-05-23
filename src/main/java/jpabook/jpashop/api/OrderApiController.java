@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -31,7 +30,7 @@ public class OrderApiController {
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1() {
-        List<Order> all = orderRepository.findAll(new OrderSearch());
+        List<Order> all = orderRepository.findAllByString(new OrderSearch());
         // 현재 lazy 로딩 으로 설정되어있으므로, 프록시( db에서 실제 값을 불러오기 전의 임의의 가짜값) 을 강제로 초기화 시켜줘야한다.
         for (Order order : all) {
             order.getMember().getName();
@@ -44,7 +43,7 @@ public class OrderApiController {
 
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2(){
-        List<Order> orders = orderRepository.findAll(new OrderSearch());
+        List<Order> orders = orderRepository.findAllByString(new OrderSearch());
         List<OrderDto> collect = orders.stream().map(o -> new OrderDto(o)).collect(toList());
         return collect;
     }
